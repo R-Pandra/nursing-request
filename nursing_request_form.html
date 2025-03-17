@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>看護需求申請</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        label { display: block; margin-top: 10px; }
+        select, input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px; width: 100%; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h2>看護需求申請單</h2>
+    <form id="nursingForm">
+        <label>患者姓名：</label>
+        <input type="text" id="patientName" required>
+        
+        <label>照護類型：</label>
+        <select id="careType">
+            <option value="short-term">短期照護</option>
+            <option value="long-term">長期照護</option>
+            <option value="day-care">日間照護</option>
+            <option value="night-care">夜間照護</option>
+        </select>
+        
+        <label>患者狀況：</label>
+        <textarea id="patientCondition" rows="3" placeholder="請簡述患者的身體狀況..." required></textarea>
+        
+        <label>所需服務：</label>
+        <select id="serviceType">
+            <option value="basic-care">基本生活照護</option>
+            <option value="medical-care">醫療照護</option>
+            <option value="rehab-support">復健協助</option>
+        </select>
+        
+        <button type="button" onclick="submitForm()">提交申請</button>
+    </form>
+    
+    <script>
+        function submitForm() {
+            let patientName = document.getElementById("patientName").value;
+            let careType = document.getElementById("careType").value;
+            let patientCondition = document.getElementById("patientCondition").value;
+            let serviceType = document.getElementById("serviceType").value;
+            
+            if (!patientName || !patientCondition) {
+                alert("請填寫所有必填欄位！");
+                return;
+            }
+            
+            let requestData = {
+                patientName,
+                careType,
+                patientCondition,
+                serviceType
+            };
+            
+            console.log("需求申請資料：", requestData);
+            alert("您的需求已提交，管理員將與您聯繫。");
+        }
+    </script>
+</body>
+</html>
