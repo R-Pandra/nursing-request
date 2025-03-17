@@ -6,10 +6,13 @@
     <title>看護需求申請</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
-        label { display: block; margin-top: 10px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
         select, input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
         button { margin-top: 20px; padding: 10px; width: 100%; background: #007bff; color: white; border: none; cursor: pointer; }
         button:hover { background: #0056b3; }
+        .checkbox-group { display: flex; flex-wrap: wrap; }
+        .checkbox-group label { width: 48%; }
+        .footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #ccc; text-align: center; font-size: 14px; color: #666; }
     </style>
 </head>
 <body>
@@ -17,7 +20,20 @@
     <form id="nursingForm">
         <label>患者姓名：</label>
         <input type="text" id="patientName" required>
-        
+
+        <label>申請者姓名：</label>
+        <input type="text" id="applicantName" required>
+
+        <label>聯絡電話：</label>
+        <input type="tel" id="contactNumber" required>
+
+        <label>方便聯絡時間：</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="morning"> 上午 (9AM-12PM)</label>
+            <label><input type="checkbox" value="afternoon"> 下午 (1PM-5PM)</label>
+            <label><input type="checkbox" value="evening"> 晚上 (6PM-9PM)</label>
+        </div>
+
         <label>照護類型：</label>
         <select id="careType">
             <option value="short-term">短期照護</option>
@@ -25,39 +41,77 @@
             <option value="day-care">日間照護</option>
             <option value="night-care">夜間照護</option>
         </select>
-        
+
         <label>患者狀況：</label>
         <textarea id="patientCondition" rows="3" placeholder="請簡述患者的身體狀況..." required></textarea>
-        
+
         <label>所需服務：</label>
         <select id="serviceType">
             <option value="basic-care">基本生活照護</option>
             <option value="medical-care">醫療照護</option>
             <option value="rehab-support">復健協助</option>
         </select>
-        
+
+        <label>照服員特質（可複選）：</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="talking"> 擅長對談</label>
+            <label><input type="checkbox" value="elderly-care"> 擅長照顧長者</label>
+            <label><input type="checkbox" value="medical-assist"> 具備醫療輔助能力</label>
+            <label><input type="checkbox" value="rehab-support"> 擅長復健輔助</label>
+        </div>
+
+        <h3>預算試算表</h3>
+        <label>預計使用時數（小時）：</label>
+        <input type="number" id="hours" min="1" placeholder="請輸入時數">
+        <label>每小時費用（NT$）：</label>
+        <input type="number" id="hourlyRate" value="500" readonly>
+        <p><strong>預估總費用：</strong> <span id="totalCost">0</span> 元</p>
+
+        <button type="button" onclick="calculateCost()">計算預算</button>
         <button type="button" onclick="submitForm()">提交申請</button>
     </form>
-    
+
+    <div class="footer">
+        <p>我們的看護中心：</p>
+        <p>安心看護、樂活照護、陽光護理之家、仁愛長照</p>
+    </div>
+
     <script>
+        function calculateCost() {
+            let hours = document.getElementById("hours").value;
+            let hourlyRate = document.getElementById("hourlyRate").value;
+            let totalCost = hours * hourlyRate;
+            document.getElementById("totalCost").innerText = totalCost || 0;
+        }
+
         function submitForm() {
             let patientName = document.getElementById("patientName").value;
+            let applicantName = document.getElementById("applicantName").value;
+            let contactNumber = document.getElementById("contactNumber").value;
             let careType = document.getElementById("careType").value;
             let patientCondition = document.getElementById("patientCondition").value;
             let serviceType = document.getElementById("serviceType").value;
-            
-            if (!patientName || !patientCondition) {
+            let contactTimes = Array.from(document.querySelectorAll("input[type='checkbox']:checked"))
+                                    .map(cb => cb.value);
+            let caregiverTraits = Array.from(document.querySelectorAll("input[type='checkbox']:checked"))
+                                    .map(cb => cb.value);
+
+            if (!patientName || !applicantName || !contactNumber || !patientCondition) {
                 alert("請填寫所有必填欄位！");
                 return;
             }
-            
+
             let requestData = {
                 patientName,
+                applicantName,
+                contactNumber,
+                contactTimes,
                 careType,
                 patientCondition,
-                serviceType
+                serviceType,
+                caregiverTraits
             };
-            
+
             console.log("需求申請資料：", requestData);
             alert("您的需求已提交，管理員將與您聯繫。");
         }
