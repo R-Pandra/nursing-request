@@ -17,10 +17,10 @@
 </head>
 <body>
     <h2>看護需求申請單</h2>
+    
+    <!-- 申請者資料 -->
+    <h3>申請者資料</h3>
     <form id="nursingForm">
-        <label>患者姓名：</label>
-        <input type="text" id="patientName" required>
-
         <label>申請者姓名：</label>
         <input type="text" id="applicantName" required>
 
@@ -33,6 +33,29 @@
             <label><input type="checkbox" value="afternoon"> 下午 (1PM-5PM)</label>
             <label><input type="checkbox" value="evening"> 晚上 (6PM-9PM)</label>
         </div>
+
+        <!-- 患者資料 -->
+        <h3>患者資料</h3>
+        <label>患者姓名：</label>
+        <input type="text" id="patientName" required>
+
+        <label>性別：</label>
+        <select id="gender">
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+            <option value="other">其他</option>
+        </select>
+
+        <label>選擇醫院：</label>
+        <select id="hospital">
+            <option value="hospital-1">台北醫院</option>
+            <option value="hospital-2">高雄醫院</option>
+            <option value="hospital-3">台中醫院</option>
+            <option value="hospital-4">其他（請填寫於患者狀況）</option>
+        </select>
+
+        <label>床號：</label>
+        <input type="text" id="bedNumber" placeholder="請輸入床號（如 A123）">
 
         <label>照護類型：</label>
         <select id="careType">
@@ -82,38 +105,6 @@
             let hourlyRate = document.getElementById("hourlyRate").value;
             let totalCost = hours * hourlyRate;
             document.getElementById("totalCost").innerText = totalCost || 0;
-        }
-
-        function submitForm() {
-            let patientName = document.getElementById("patientName").value;
-            let applicantName = document.getElementById("applicantName").value;
-            let contactNumber = document.getElementById("contactNumber").value;
-            let careType = document.getElementById("careType").value;
-            let patientCondition = document.getElementById("patientCondition").value;
-            let serviceType = document.getElementById("serviceType").value;
-            let contactTimes = Array.from(document.querySelectorAll("input[type='checkbox']:checked"))
-                                    .map(cb => cb.value);
-            let caregiverTraits = Array.from(document.querySelectorAll("input[type='checkbox']:checked"))
-                                    .map(cb => cb.value);
-
-            if (!patientName || !applicantName || !contactNumber || !patientCondition) {
-                alert("請填寫所有必填欄位！");
-                return;
-            }
-
-            let requestData = {
-                patientName,
-                applicantName,
-                contactNumber,
-                contactTimes,
-                careType,
-                patientCondition,
-                serviceType,
-                caregiverTraits
-            };
-
-            console.log("需求申請資料：", requestData);
-            alert("您的需求已提交，管理員將與您聯繫。");
         }
     </script>
 </body>
